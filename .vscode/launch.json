@@ -1,0 +1,11 @@
+{
+    "configurations": [
+    
+        {
+            "type": "pwa-chrome",
+            "name": "http://total1",
+            "request": "launch",
+            "url": "http://total1"
+        }
+    ]
+}

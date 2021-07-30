@@ -12,6 +12,8 @@ const globalErrorHandler = require("./controllers/errorController");
 const categoryRouter = require("./routes/categoryRoutes");
 const userRouter = require("./routes/userRoutes");
 const productRouter = require("./routes/productRoutes");
+const discountRouter = require("./routes/discountRoutes");
+const checkoutRouter = require("./routes/checkoutRoutes");
 // const viewRouter = require("./routes/viewRoutes");
 const cors = require("cors");
 const app = express();
@@ -49,8 +51,10 @@ app.use(mongoSanitize());
 app.use(xss());
 // 3)routes
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/discount", discountRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/checkout", checkoutRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

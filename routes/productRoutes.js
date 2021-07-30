@@ -4,11 +4,11 @@ const productController = require("./../controllers/productController");
 const Product = require("./../models/productModel");
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect);
 router
   .route("/")
   .get(productController.getAllProducts)
   .post(
+    authController.protect,
     authController.restrictTo("admin", "lead-guide"),
     productController.setCategoryIds,
     productController.createProduct
