@@ -24,6 +24,10 @@ const orderSchema = new mongoose.Schema(
 
       //   validate: [validator.isEmail, "please provide a valid email"],
     },
+    transaction_id: {
+      type: String,
+      //   required: [true, "please tell us your transaction_id"],
+    },
     email: {
       type: String,
       required: [true, "please tell us your email"],
@@ -52,11 +56,9 @@ const orderSchema = new mongoose.Schema(
     },
     base_total_price: {
       type: Number,
-      required: [true, "please tell us your price"],
     },
     grand_total: {
       type: Number,
-      required: [true, "please tell us your price"],
     },
     discount_total: {
       type: Number,

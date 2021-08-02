@@ -17,47 +17,49 @@ const multerFilter = (req, file, cb) => {
     cb(new AppError("Not an image! Please upload only images.", 400), false);
   }
 };
+
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
-exports.uploadUserPhoto = upload.single("imageCover");
 
-exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
+exports.uploadProductImages = upload.fields([
+  { name: "imageCover", maxCount: 1 },
+  { name: "images", maxCount: 3 },
+]);
+exports.resizeProductImages = catchAsync(async (req, res, next) => {
+  console.log(req.params)
+  if (!req.files.imageCover || !req.files.images) return next();
 
-  req.file.filename = `user-${req.product.id}-${Date.now()}.jpeg`;
-  console.log(req.file.filename);
-  await sharp(req.file.buffer)
-    .resize(500, 500)
+  // 1) Cover image
+  req.body.imageCover = `products-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(`public/img/product/${req.file.filename}`);
+    .toFile(`public/img/products/${req.body.imageCover}`);
+
+  // 2) Images
+  req.body.images = [];
+
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/products/${filename}`);
+
+      req.body.images.push(filename);
+    })
+  );
 
   next();
 });
 exports.getAllProducts = factory.getAll(Product);
 exports.getProduct = factory.getOne(Product);
-exports.createProduct = catchAsync(async (req, res, next) => {
-  const filteredBody = req.body;
-  if (req.file) filteredBody.photo = req.file.filename;
-  console.log(filteredBody);
-  console.log(req);
-  // const doc = await Product.create(req.body);
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      // data: req.body,
-    },
-  });
-});
+exports.createProduct = factory.createOne(Product);
 exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);

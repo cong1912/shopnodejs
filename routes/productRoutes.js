@@ -10,16 +10,22 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin", "lead-guide"),
+    productController.uploadProductImages,
+    productController.resizeProductImages,
     productController.setCategoryIds,
     productController.createProduct
   );
-router.route("/:id").get(productController.getProduct);
-//   .delete(
-//     authController.restrictTo("admin", "lead-guide"),
-//     productController.deleteProduct
-//   )
-//   .patch(
-//     authController.restrictTo("admin", "lead-guide"),
-//     productController.updateProduct
-//   );
+router
+  .route("/:id")
+  .get(productController.getProduct)
+  .delete(
+    authController.restrictTo("admin", "lead-guide"),
+    productController.deleteProduct
+  )
+  .patch(
+    authController.restrictTo("admin", "lead-guide"),
+    productController.uploadProductImages,
+    productController.resizeProductImages,
+    productController.updateProduct
+  );
 module.exports = router;

@@ -1,4 +1,4 @@
-const Discount = require("./../models/discoundModel");
+const Discount = require("./../models/discountModel");
 const factory = require("./handlerFactory");
 
 exports.getAllDiscounts = factory.getAll(Discount);

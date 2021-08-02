@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const orderItemSchema = new mongoose.Schema(
+const discountSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -39,6 +39,6 @@ const orderItemSchema = new mongoose.Schema(
   }
 );
 
-const OrderItem = mongoose.model("OrderItem", orderItemSchema);
+const Discount = mongoose.model("Discount", discountSchema);
 
-module.exports = OrderItem;
+module.exports = Discount;
